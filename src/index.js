@@ -1,21 +1,21 @@
-const express = require('express')
+import express, { json } from 'express';
 // Import routers
 // const router = require('./routers/example')
-const pool = require('./db/database')
+import { query } from './db/database';
 
 const makeQuery = async () => {
-    const res = await pool.query('SELECT * from test')
-    console.log('\n', res)
-}
+	const res = await query('SELECT * from test');
+	console.log('\n', res);
+};
 
-makeQuery()
+makeQuery();
 
-const app = express()
-app.use(express.json())
+const app = express();
+app.use(json());
 // Link routers
 // app.use(example)
 
 
 app.listen(3000, () => {
-    console.log('Express up on port:'+3000)
-})
+	console.log('Express up on port:'+3000);
+});
