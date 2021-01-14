@@ -1,19 +1,19 @@
-const router = require('express').Router()
+const router = require('express').Router();
 
 router.get('/', async (req, res) => {
-    try {
+	try {
         
-    } catch(err) {
+	} catch(err) {
         
-    }
-})
+	}
+});
 
 router.post('/', async (req, res) => {
-    try{
+	try{
         
-    } catch(err){
+	} catch(err){
 
-    }
-})
+	}
+});
 
-module.exports = router
+module.exports = router;
