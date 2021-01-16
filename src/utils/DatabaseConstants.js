@@ -4,6 +4,8 @@ const REQUESTS_referral_status = {
 	2: 'REJECT'
 };
 
+
+
 module.exports = {
 	REQUESTS_referral_status
 };
