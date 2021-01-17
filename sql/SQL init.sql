@@ -9,7 +9,7 @@ INSERT INTO test VALUES(1);
 
 CREATE TABLE USERS(
     user_id BIGSERIAL PRIMARY KEY,
-    email varchar(255),
+    email varchar(255) UNIQUE,
     f_name varchar(255) NOT NULL,
     l_name varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
