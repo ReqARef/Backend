@@ -8,10 +8,10 @@ Id int
 INSERT INTO test VALUES(1);
 
 CREATE TABLE USERS(
-    user_id BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     email varchar(255) UNIQUE,
-    f_name varchar(255) NOT NULL,
-    l_name varchar(255) NOT NULL,
+    first_name varchar(255) NOT NULL,
+    last_name varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
     role INTEGER NOT NULL,
     company_name varchar(255),
@@ -26,8 +26,8 @@ CREATE TABLE USERS(
 INSERT INTO 
 USERS(
     email,
-    f_name,
-    l_name,
+    first_name,
+    last_name,
     password,
     role,
     company_name,
