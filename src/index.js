@@ -1,8 +1,7 @@
 const express = require('express');
 const signUpRouter = require('./routers/signUpRouter');
+
 const port = process.env.port || 3000;
-
-
 const app = express();
 
 app.use(express.json());
