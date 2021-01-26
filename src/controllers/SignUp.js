@@ -1,4 +1,5 @@
-const Pool = require('../db/database');
+const db = require('../db/database');
+const Pool = db.getPool();
 const bcrypt = require('bcryptjs');
 const {checkUserObjectForNull} = require('../utils/helperFunctions');
 
@@ -22,7 +23,7 @@ const signUp = async(req,res) => {
 		const insertRowString = `INSERT INTO USERS(email,first_name,last_name,password,role,
 			company_name, experience,college,job_role,resume) VALUES('${userObject.email.toLowerCase()}', 
 			'${userObject.firstName}', '${userObject.lastName}', '${userObject.password}',
-			'${userObject.role}', '${userObject.companyName}', '${userObject.experience}',
+			'${userObject.role}', '${userObject.companyName.toUpperCase()}', '${userObject.experience}',
 			'${userObject.college}', '${userObject.jobRole}', '${userObject.resume}');`;
 		await Pool.query(insertRowString);
 		result['status'] = true;
