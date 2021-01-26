@@ -1,6 +1,6 @@
 const Pool = require('../db/database');
 const bcrypt = require('bcryptjs');
-const {checkUserObjectForNull} = require('../utils/helperFunctions');
+const {checkUserObjectForNull} = require('../utils/HelperFunctions');
 
 const signUp = async(req,res) => {
 	const result = {status: false};
