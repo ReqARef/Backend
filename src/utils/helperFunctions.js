@@ -1,10 +1,14 @@
 const db = require('../db/database'); 
 const Pool = db.getPool();
 const checkUserObjectForNull = (userObject) => {
-	const { email, firstName, lastName, password, role, companyName, experience, college, jobRole,
-		resume} = userObject;
+	if(!userObject) {
+		return false;
+	}
+	
+	const { email, mobile, firstName, lastName, password, role, companyName, experience, college, 
+		jobRole, resume} = userObject;
 	if(!email || !firstName || !lastName || !password || !role || !companyName || !experience || 
-		!college || !jobRole || !resume){
+		!college || !jobRole || !resume || !mobile){
 		return false;
 	}
 	return true;
@@ -29,6 +33,7 @@ const validateUserCred = (userCred) => {
 	return true;
 };
 
+
 const genOTP = (len) => {
 	var result = '';
 	var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -38,9 +43,21 @@ const genOTP = (len) => {
 	return result;
 };
 
+const checkRequestInitiationObjectForNull = (requestObject) => {
+	if(!requestObject) {
+		return false;
+	}
+	const {request_from, request_to, job_id, company_id, job_url, job_name} = requestObject;
+	if(!request_from, !request_to || !job_id || !company_id || !job_url || !job_name) {
+		return false;
+	}
+	return true;
+};
+
 module.exports = {
 	checkUserObjectForNull,
 	findUser,
 	validateUserCred,
-	genOTP
+	genOTP,
+	checkRequestInitiationObjectForNull
 };
