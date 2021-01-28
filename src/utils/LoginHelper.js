@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Pool = require('../db/database');
+const db = require('../db/database');
+const Pool = db.getPool();
 
 const findByCredentials = async (email, password) => {
 	const checkForEmailString = `SELECT * FROM USERS WHERE email=${email.toLowerCase()}`;
@@ -27,9 +28,6 @@ const generateRefreshToken = async (email) => {
 	}
 	const refreshToken = jwt.sign({email}, 
 		process.env.refresh_jwt_secret, { expiresIn: process.env.refresh_jwt_expiry});
-	const insertToDbString = `INSERT INTO USERS(refresh_token) VALUES(${refreshToken}) 
-		WHERE email=${email}`;
-	await Pool.query(insertToDbString);
 	return refreshToken;
 };
 
