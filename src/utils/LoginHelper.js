@@ -27,9 +27,6 @@ const generateRefreshToken = async (email) => {
 	}
 	const refreshToken = jwt.sign({email}, 
 		process.env.refresh_jwt_secret, { expiresIn: process.env.refresh_jwt_expiry});
-	const insertToDbString = `INSERT INTO USERS(refresh_token) VALUES(${refreshToken}) 
-		WHERE email=${email}`;
-	await Pool.query(insertToDbString);
 	return refreshToken;
 };
 
