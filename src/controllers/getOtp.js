@@ -17,11 +17,9 @@ const getOtp = async (req,res) => {
 			to: recepient,
 			subject: 'Money Manager'
 		});
-		console.log(message);
 		res.send('OTP send successfully');
 	}
 	catch(err){
-		console.log(err);
 		return res.send(err);
 	}
 };

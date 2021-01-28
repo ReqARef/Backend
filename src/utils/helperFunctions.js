@@ -25,7 +25,7 @@ const findUser = async (userCred) => {
 	return checkForExistingEmailResult.rows[0];
 };
 
-const validateUserCred = (userCred) => {
+const checkEmailAndPasswordForNUll = (userCred) => {
 	const { email,password } = userCred;
 	if(!email || !password){
 		return false;
@@ -57,7 +57,7 @@ const checkRequestInitiationObjectForNull = (requestObject) => {
 module.exports = {
 	checkUserObjectForNull,
 	findUser,
-	validateUserCred,
+	checkEmailAndPasswordForNUll,
 	genOTP,
 	checkRequestInitiationObjectForNull
 };

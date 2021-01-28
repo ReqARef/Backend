@@ -23,7 +23,6 @@ const signUp = async(req,res) => {
 			WHERE company_name='${userObject.companyName.toUpperCase()}';`;
 		const checkExistingCompanyResult = await Pool.query(checkExistingCompanyString);
 		if(checkExistingCompanyResult.rows.length>0){
-			console.log(checkExistingCompanyResult.rows[0]);
 			var total_employees = parseInt(checkExistingCompanyResult.rows[0].total_employees)+1;
 			const alterCompaniesTableString = `UPDATE COMPANIES 
 				SET total_employees = '${total_employees}'
@@ -34,7 +33,6 @@ const signUp = async(req,res) => {
 		else{
 			const insertCompanyNameString = `INSERT INTO COMPANIES(company_name) VALUES(
 			'${userObject.companyName.toUpperCase()}');`;
-			console.log(insertCompanyNameString);
 			await Pool.query(insertCompanyNameString);
 		}	
 		userObject.password = await bcrypt.hash(
@@ -57,7 +55,6 @@ const signUp = async(req,res) => {
 		res.send(result);
 	}
 	catch(err){
-		console.log(err);
 		result.error = err.message;
 		return res.send(result);
 	}

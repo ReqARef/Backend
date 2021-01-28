@@ -26,7 +26,6 @@ const refreshTokenAuth = async(req,res) => {
 		}
 	}
 	catch(err){
-		console.log(err);
 		result.error = err.message;
 		return res.status(401).send(result);
 	}
