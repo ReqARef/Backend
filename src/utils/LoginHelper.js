@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Pool = require('../db/database');
+const db = require('../db/database');
+const Pool = db.getPool();
 
 const findByCredentials = async (email, password) => {
 	const checkForEmailString = `SELECT * FROM USERS WHERE email=${email.toLowerCase()}`;

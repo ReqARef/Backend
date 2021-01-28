@@ -13,7 +13,7 @@ CREATE TABLE USERS(
 	otp VARCHAR,
 	refresh_token VARCHAR,
     created_on TIMESTAMP NOT NULL DEFAULT NOW(),
-    last_login TIMESTAMP,
+    last_login TIMESTAMP
 );
 
 CREATE INDEX USERS_EMAIL_PRIMARY_INDEX ON USERS (email);
