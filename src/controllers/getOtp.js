@@ -11,7 +11,7 @@ const client = new SMTPClient({
 const getOtp = async (req,res) => {
 	const recepient = req.body.email;
 	try{
-		const message = await client.sendAsync({
+		await client.sendAsync({
 			text: 'Your One time password is : ' + genOTP(8),
 			from: process.env.email_username,
 			to: recepient,
