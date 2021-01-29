@@ -18,14 +18,14 @@ const login = async( req,res) => {
 		var newRefreshToken = null; 
 		if(user.refresh_token){
 			newRefreshToken=user.refresh_token;
-			jwt.verify(user.refresh_token, process.env.refresh_jwt_secret, async (err) => {
-				if(err){
-					newRefreshToken = generateNewAndSaveRefreshToken(user.email);
-				}
-			});
+			try{
+				jwt.verify(user.refresh_token, process.env.refresh_jwt_secret);
+			}catch(err){
+				newRefreshToken = await generateNewAndSaveRefreshToken(user.email);
+			}
 		}
 		else{
-			newRefreshToken = generateNewAndSaveRefreshToken(user.email);
+			newRefreshToken = await generateNewAndSaveRefreshToken(user.email);
 		}
 		result['status']=true;
 		result['message']='Login Successful';

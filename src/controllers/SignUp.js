@@ -11,16 +11,24 @@ const signUp = async(req,res) => {
 		if(!checkUserObjectForNull(userObject)){
 			throw new Error('Invalid inputs');
 		}
-		const checkExistingEmailString = `SELECT email,mobile FROM USERS WHERE email=
-			'${userObject.email.toLowerCase()}' OR mobile='${userObject.mobile}';`;
+		const checkExistingEmailString = `SELECT email FROM USERS WHERE email=
+			'${userObject.email.toLowerCase()}';`;
 		const checkExistingEmailResult = await Pool.query(checkExistingEmailString);
 		if(checkExistingEmailResult.rows.length > 0){
-			result['error'] = 'User already exist';
+			result['error'] = 'Email already exist';
+			return res.send(result);
+		}
+
+		const checkExistingMobileString = `SELECT mobile FROM USERS WHERE mobile=
+		'${userObject.mobile}';`;
+		const checkExistingMobileResult = await Pool.query(checkExistingMobileString);
+		if(checkExistingMobileResult.rows.length > 0){
+			result['error'] = 'Phone already exist';
 			return res.send(result);
 		}
 	
 		const checkExistingCompanyString = `SELECT * FROM COMPANIES
-			WHERE company_name='${userObject.companyName.toUpperCase()}';`;
+			WHERE company_name='${userObject.companyName.toLowerCase()}';`;
 		const checkExistingCompanyResult = await Pool.query(checkExistingCompanyString);
 		if(checkExistingCompanyResult.rows.length>0){
 			var total_employees = parseInt(checkExistingCompanyResult.rows[0].total_employees)+1;
@@ -32,7 +40,7 @@ const signUp = async(req,res) => {
 		}
 		else{
 			const insertCompanyNameString = `INSERT INTO COMPANIES(company_name) VALUES(
-			'${userObject.companyName.toUpperCase()}');`;
+			'${userObject.companyName.toLowerCase()}');`;
 			await Pool.query(insertCompanyNameString);
 		}	
 		userObject.password = await bcrypt.hash(
@@ -41,12 +49,12 @@ const signUp = async(req,res) => {
 		const refreshToken = generateRefreshToken(userObject.email.toLowerCase());
 		const authToken = generateAccessToken(userObject.email.toLowerCase());
 		const insertRowString = `INSERT INTO USERS(email,mobile,first_name,last_name,password,role,
-			company_name, experience,college,job_role,resume,refresh_token) VALUES(
+			company_name, experience,college,job_role,resume,refresh_token,country) VALUES(
 			'${userObject.email.toLowerCase()}', ${userObject.mobile},'${userObject.firstName}',
 			'${userObject.lastName}','${userObject.password}','${userObject.role}', 
-			'${userObject.companyName.toUpperCase()}', '${userObject.experience}', 
+			'${userObject.companyName.toLowerCase()}', '${userObject.experience}', 
 			'${userObject.college}', '${userObject.jobRole}', '${userObject.resume}', 
-			'${refreshToken}');`;
+			'${refreshToken}' , '${userObject.country}');`;
 		await Pool.query(insertRowString);
 		result['status'] = true;
 		result['message'] = 'User Added Successfully';

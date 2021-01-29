@@ -38,8 +38,8 @@ const generateNewAndSaveRefreshToken = async (email) => {
 	var newRefreshToken=null;
 	newRefreshToken = generateRefreshToken(email);
 	const updateRefreshTokenString = `UPDATE USERS
-	SET refresh_token = ${newRefreshToken}
-	WHERE email = ${email}`;
+	SET refresh_token = '${newRefreshToken}'
+	WHERE email = '${email}'`;
 	await Pool.query(updateRefreshTokenString);
 	return newRefreshToken;
 };
