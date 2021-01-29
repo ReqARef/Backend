@@ -24,6 +24,7 @@ const refreshTokenAuth = async(req,res) => {
 			result['error'] = 'Refresh token expired';
 			return res.send(result);
 		}
+		return result;
 	}
 	catch(err){
 		result.error = err.message;

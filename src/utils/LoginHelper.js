@@ -22,7 +22,7 @@ const generateAccessToken = (email) => {
 	return accessToken;
 };
 
-const generateRefreshToken = async (email) => {
+const generateRefreshToken = (email) => {
 	if(!email) {
 		throw new Error('User\'s email not found');
 	}
