@@ -6,9 +6,9 @@ const checkUserObjectForNull = (userObject) => {
 	}
 	
 	const { email, mobile, firstName, lastName, password, role, companyName, experience, college, 
-		jobRole, resume} = userObject;
+		jobRole, resume, country} = userObject;
 	if(!email || !firstName || !lastName || !password || !role || !companyName || !experience || 
-		!college || !jobRole || !resume || !mobile){
+		!college || !jobRole || !resume || !mobile || !country){
 		return false;
 	}
 	return true;
