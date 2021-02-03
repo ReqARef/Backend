@@ -4,6 +4,7 @@ CREATE TABLE USERS(
     first_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
+	country VARCHAR NOT NULL,
     role INTEGER NOT NULL,
     company_name VARCHAR REFERENCES COMPANIES(company_name),
     experience INTEGER,

@@ -5,9 +5,9 @@ const client = new SMTPClient({
 	user : process.env.email_username,
 	password : process.env.email_password,
 	host : process.env.email_host,
-	ssl : process.env.email_ssl
+	ssl : true
 });
-
+const result ={status : false};
 const getOtp = async (req,res) => {
 	const recepient = req.body.email;
 	try{
@@ -15,11 +15,14 @@ const getOtp = async (req,res) => {
 			text: 'Your One time password is : ' + genOTP(8),
 			from: process.env.email_username,
 			to: recepient,
-			subject: 'Money Manager'
+			subject: 'ReqARef'
 		});
-		res.send('OTP send successfully');
+		result['status'] = true;
+		result['message'] = 'OTP sent Successfully';
+		res.send(result);
 	}
 	catch(err){
+		console.log(err);
 		return res.send(err);
 	}
 };
