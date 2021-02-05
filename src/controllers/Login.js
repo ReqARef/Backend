@@ -29,6 +29,7 @@ const login = async( req,res) => {
 		}
 		result['status']=true;
 		result['message']='Login Successful';
+		result['data'] = user;
 		result['refreshToken']=newRefreshToken;
 		result['authToken']= generateAccessToken(user.email);
 		res.send(result);
