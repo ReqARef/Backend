@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const {getOtp} = require('../controllers/getOtp');
+const {emailOTP} = require('../controllers/OTP');
 
-router.post('/getotp',getOtp);
+router.post('/emailOTP', emailOTP);
 
 
 module.exports=router;

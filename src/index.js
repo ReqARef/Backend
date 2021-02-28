@@ -7,7 +7,8 @@ const port = process.env.port || 3000;
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({credentials: true, origin: process.env.website_host}));
+
 app.use(signUpRouter);
 app.use(loginRouter);
 app.use(otpRouter);

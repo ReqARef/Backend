@@ -1,4 +1,4 @@
-const {findUser,checkEmailAndPasswordForNUll} = require('../utils/helperFunctions');
+const {findUser,checkEmailAndPasswordForNull} = require('../utils/helperFunctions');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {generateNewAndSaveRefreshToken,generateAccessToken} = require('../utils/LoginHelper');
@@ -7,7 +7,7 @@ const login = async( req,res) => {
 	const result = {status : false};
 	const userCred =req.body;
 	try{
-		if(!checkEmailAndPasswordForNUll(userCred)){
+		if(!checkEmailAndPasswordForNull(userCred)){
 			throw new Error('Invalid Inputs');
 		}
 		const user = await findUser(userCred);
