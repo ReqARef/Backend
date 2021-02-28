@@ -1,19 +1,22 @@
 CREATE TABLE USERS(
     email VARCHAR PRIMARY KEY,
-	mobile VARCHAR UNIQUE NOT NULL,
+	mobile VARCHAR UNIQUE,
     first_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
-	country VARCHAR NOT NULL,
+	country VARCHAR,
     role INTEGER NOT NULL,
     company_name VARCHAR REFERENCES COMPANIES(company_name),
     experience INTEGER,
-    college VARCHAR NOT NULL,
+    college VARCHAR,
     job_role VARCHAR,
-    resume VARCHAR NOT NULL,
+    resume VARCHAR,
 	otp VARCHAR,
 	refresh_token VARCHAR,
     created_on TIMESTAMP NOT NULL DEFAULT NOW(),
+	email_verified BOOLEAN DEFAULT false,
+	phone_verified BOOLEAN DEFAULT false,
+	is_blocked BOOLEAN DEFAULT false,
     last_login TIMESTAMP
 );
 

@@ -4,11 +4,8 @@ const checkUserObjectForNull = (userObject) => {
 	if(!userObject) {
 		return false;
 	}
-	
-	const { email, mobile, firstName, lastName, password, role, companyName, experience, college, 
-		jobRole, resume, country} = userObject;
-	if(!email || !firstName || !lastName || !password || !role || !companyName || !experience || 
-		!college || !jobRole || !resume || !mobile || !country){
+	const { email, firstName, lastName, password ,role} = userObject;
+	if(!email || !firstName || !lastName || !password || !role){
 		return false;
 	}
 	return true;
@@ -25,7 +22,7 @@ const findUser = async (userCred) => {
 	return checkForExistingEmailResult.rows[0];
 };
 
-const checkEmailAndPasswordForNUll = (userCred) => {
+const checkEmailAndPasswordForNull = (userCred) => {
 	const { email,password } = userCred;
 	if(!email || !password){
 		return false;
@@ -57,7 +54,7 @@ const checkRequestInitiationObjectForNull = (requestObject) => {
 module.exports = {
 	checkUserObjectForNull,
 	findUser,
-	checkEmailAndPasswordForNUll,
+	checkEmailAndPasswordForNull,
 	genOTP,
 	checkRequestInitiationObjectForNull
 };
