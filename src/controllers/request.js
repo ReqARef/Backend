@@ -28,7 +28,7 @@ const requestController = async (req,res) => {
 		return res.send(result);
 	}
 	catch(err){
-		result['message'] = err.message;
+		result['error'] = err.message;
 		return res.send(result);
 	}
 };
