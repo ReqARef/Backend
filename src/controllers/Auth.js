@@ -41,7 +41,7 @@ const login = async(req,res) => {
 		}
 		result['status']=true;
 		result['message']='Login Successful';
-		result['data'] = user;
+		result['user'] = user;
 		result['authToken']= generateAccessToken(user.email);
 		res.cookie('refreshToken', newRefreshToken, { maxAge:  ONE_MONTH_MS, httpOnly: true}); 
 		res.send(result);
