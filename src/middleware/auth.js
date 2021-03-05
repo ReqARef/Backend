@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Pool = require('../db/database').getPool();
 const {extractRefreshTokenHeaderFromReq} = require('../utils/RequestHelper');
-const {generateAccessToken} = require('../utils/LoginHelper');
+const {generateAccessToken} = require('../utils/AuthHelper');
 
 const auth = async (req, res, next) => {
 	const verifyAuthToken = async (accessToken) => {
@@ -27,8 +27,8 @@ const auth = async (req, res, next) => {
 			if(!refreshtoken) {
 				return result;
 			}
-			const matchRefreshTokenString = `SELECT email FROM USERS WHERE refresh_
-			token='${refreshtoken}'`;
+			const matchRefreshTokenString = `SELECT email FROM USERS WHERE 
+			refresh_token='${refreshtoken}'`;
 			const matchRefreshTokenResult = await Pool.query(matchRefreshTokenString);
 			if(!matchRefreshTokenResult.rows)
 				throw new Error();
@@ -45,12 +45,12 @@ const auth = async (req, res, next) => {
 
 	try{
 		const accessToken = req.header('Authorization').replace('Bearer ', '');
-		const authTokenResult = verifyAuthToken(accessToken);
+		const authTokenResult = await verifyAuthToken(accessToken);
 		if(authTokenResult['status']) {
 			req['user'] = authTokenResult['user'];
 			req['authToken'] = accessToken;
 		} else {
-			const refreshTokenResult = verifyRefreshToken();
+			const refreshTokenResult = await verifyRefreshToken();
 			if(refreshTokenResult['status']) {
 				req['user'] = refreshTokenResult['user'];
 				req['authToken'] = refreshTokenResult['authToken'];
@@ -60,7 +60,7 @@ const auth = async (req, res, next) => {
 		}
 		next();
 	} catch(e) {
-		res.status(469).send({err: 'Please authenticate.'});
+		res.status(401).send({err: 'Please authenticate.'});
 	}
 };
 
