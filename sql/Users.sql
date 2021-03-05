@@ -13,17 +13,12 @@ CREATE TABLE USERS(
     resume VARCHAR,
 	otp VARCHAR,
 	refresh_token VARCHAR,
-    created_on TIMESTAMP NOT NULL DEFAULT NOW(),
 	email_verified BOOLEAN DEFAULT false,
 	phone_verified BOOLEAN DEFAULT false,
 	is_blocked BOOLEAN DEFAULT false,
-    last_login TIMESTAMP
+	give_referrals BOOLEAN DEFAULT true,
+    last_login TIMESTAMP,
+	created_on TIMESTAMP NOT NULL DEFAULT NOW(),
 );
 
 CREATE INDEX USERS_EMAIL_PRIMARY_INDEX ON USERS (email);
-INSERT INTO USERS(email, first_name, last_name, password, role, company_name, experience, 
-college, job_role, resume) VALUES( 'salwanrohit1998@gmail.com', 'Rohit', 'Salwan', 'Rohit1@', 1,
-    'AMDOCS', 1, 'Thapar', 'SDE', 'JKBVKJAHSEBGV');
-INSERT INTO USERS(email, first_name, last_name, password, role, company_name, experience, 
-college, job_role, resume) VALUES( 'khajuriakanav5@gmail.com', 'Kanav', 'Khajuria', 'Kanav1@', 1,
-    'CISCO', 1, 'Thapar', 'SDE', 'JKBVKJAHSEBGV');
