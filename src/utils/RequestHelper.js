@@ -8,6 +8,16 @@ const checkRequestObjectForNull = (requestObject) => {
 	return true;
 };
 
+const extractRefreshTokenHeaderFromReq = (req) => {
+	const {rawHeaders} = req;
+	for (let i = 0; i < rawHeaders.length; i++) {
+		if(rawHeaders[i].includes('refreshToken=')) {
+			return rawHeaders[i].substring(13);
+		}
+	}
+	return null;
+};
+
 const generateId = (requestObject) => {
 	const {requestFrom, requestTo, jobId, companyId} = requestObject;
 	const id = 'request_'+convertToBase64(requestFrom)+'_'+convertToBase64(requestTo)
@@ -21,5 +31,6 @@ const convertToBase64 = (temp) => {
 
 module.exports = {
 	checkRequestObjectForNull,
-	generateId
+	generateId,
+	extractRefreshTokenHeaderFromReq
 };

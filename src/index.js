@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const signUpRouter = require('./routers/signUpRouter');
-const loginRouter = require('./routers/loginRouter');
+const AuthRouter = require('./routers/Auth');
 const otpRouter = require('./routers/otpRouter');
 const requestRouter = require('./routers/requestRouter');
 const port = process.env.port || 3000;
@@ -10,8 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({credentials: true, origin: process.env.website_host}));
 
-app.use(signUpRouter);
-app.use(loginRouter);
+app.use(AuthRouter);
 app.use(otpRouter);
 app.use(requestRouter);
 
