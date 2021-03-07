@@ -72,9 +72,9 @@ const signUp = async(req,res) => {
 		);
 		const refreshToken = generateRefreshToken(userObject.email);
 		const authToken = generateAccessToken(userObject.email);
-		const insertRowString = `INSERT INTO USERS(email,first_name,last_name,password, role) VALUES(
-			'${userObject.email}','${userObject.firstName}',
-			'${userObject.lastName}','${userObject.password}', '${userObject.role}');`;
+		const insertRowString = `INSERT INTO USERS(email,first_name,last_name,password,role
+			,refresh_token) VALUES('${userObject.email}','${userObject.firstName}',
+			'${userObject.lastName}','${userObject.password}', '${userObject.role}', '${refreshToken}');`;
 		await Pool.query(insertRowString);
 		result['status'] = true;
 		result['message'] = 'User Added Successfully';
