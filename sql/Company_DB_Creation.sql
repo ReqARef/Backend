@@ -1,6 +1,5 @@
 CREATE TABLE COMPANIES(
 	company_name VARCHAR PRIMARY KEY,
-    total_employees BIGINT NOT NULL DEFAULT 1,
 	created_on TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
