@@ -9,6 +9,7 @@ const getCompaniesList = async (req,res) => {
 		const getListResult = await Pool.query(getListString);
 		result['status'] = true;
 		result['data'] = getListResult['rows'];
+		result['authToken'] = req['authToken'];
 		res.send(result);
 	}
 	catch(err){
