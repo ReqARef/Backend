@@ -1,22 +1,23 @@
 const express = require('express');
-// Import routers
-// const router = require('./routers/example')
-const Pool = require('./db/database');
-
+const cors = require('cors');
+const AuthRouter = require('./routers/Auth');
+const otpRouter = require('./routers/otpRouter');
+const requestRouter = require('./routers/requestRouter');
+const companyRouter = require('./routers/Company');
+const searchRouter = require('./routers/Search');
 const port = process.env.port || 3000;
-
-const makeQuery = async () => {
-	const res = await Pool.query('SELECT * from test');
-	console.log('\n', res);
-};
-
-makeQuery();
-
+const cookieParser = require('cookie-parser');
 const app = express();
-app.use(express.json());
-// Link routers
-// app.use(example)
 
+app.use(express.json());
+app.use(cors({credentials: true, origin: process.env.website_host}));
+app.use(cookieParser());
+
+app.use(AuthRouter);
+app.use(otpRouter);
+app.use(requestRouter);
+app.use(companyRouter);
+app.use(searchRouter);
 
 app.listen(port, () => {
 	console.log('Express up on port:'+port);

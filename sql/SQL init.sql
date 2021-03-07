@@ -1,8 +1,4 @@
-CREATE ROLE username WITH LOGIN PASSWORD 'password’;
+CREATE ROLE username WITH LOGIN PASSWORD 'password';
 ALTER ROLE username CREATEDB; 
 CREATE DATABASE MoneyManager;
 GRANT ALL PRIVILEGES ON DATABASE MoneyManager TO username;
-CREATE TABLE test(
-Id int
-);
-INSERT INTO test VALUES(1);
