@@ -20,9 +20,7 @@ const requestController = async (req,res) => {
 			'${requestObject.requestFrom}', '${requestObject.requestTo}', '${requestObject.jobId}',
 			'${requestObject.companyId}','${requestObject.jobUrl}', '${requestObject.jobName}',
 			'${requestObject.refereeComment}');`;
-		console.log(insertRequestString);
-		const queryResult = await Pool.query(insertRequestString);
-		console.log(queryResult);
+		await Pool.query(insertRequestString);
 		result['status'] = true;
 		result['message']='Request added successfully';
 		return res.send(result);
