@@ -4,6 +4,13 @@ const {extractRefreshTokenHeaderFromReq} = require('../utils/RequestHelper');
 const {generateAccessToken} = require('../utils/AuthHelper');
 
 const auth = async (req, res, next) => {
+	const filterUserObject = (user) => {
+		user = {...user};
+		delete user['password'];
+		delete user['refresh_token'];
+		return user;
+	};
+
 	const verifyAuthToken = async (accessToken) => {
 		const result = {status: false};
 		try {
@@ -12,7 +19,7 @@ const auth = async (req, res, next) => {
 			const getUserResult = await Pool.query(getUserString);
 			if(!getUserResult.rows)
 				throw new Error();
-			result['user'] = getUserResult.rows[0];
+			result['user'] = filterUserObject(getUserResult.rows[0]);
 			result['status'] = true;
 			return result;
 		} catch {
@@ -27,14 +34,14 @@ const auth = async (req, res, next) => {
 			if(!refreshtoken) {
 				return result;
 			}
-			const matchRefreshTokenString = `SELECT email FROM USERS WHERE 
+			const matchRefreshTokenString = `SELECT * FROM USERS WHERE 
 			refresh_token='${refreshtoken}'`;
 			const matchRefreshTokenResult = await Pool.query(matchRefreshTokenString);
 			if(!matchRefreshTokenResult.rows)
 				throw new Error();
 			jwt.verify(refreshtoken, process.env.refresh_jwt_secret);
 			result['authToken'] = generateAccessToken(matchRefreshTokenResult.rows[0].email);
-			result['user'] = matchRefreshTokenResult.rows[0];
+			result['user'] = filterUserObject(matchRefreshTokenResult.rows[0]);
 			result['status'] = true;
 			return result;
 		}
