@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const AuthRouter = require('./routers/Auth');
-const otpRouter = require('./routers/OTPRouter');
-const requestRouter = require('./routers/RequestRouter');
+const otpRouter = require('./routers/otpRouter');
+const requestRouter = require('./routers/requestRouter');
 const port = process.env.port || 3000;
 const cookieParser = require('cookie-parser');
 const app = express();
