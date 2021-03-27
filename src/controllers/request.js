@@ -1,9 +1,10 @@
 const db = require('../db/database');
 const Pool = db.getPool();
 const { checkRequestObjectForNull, generateId } = require('../utils/RequestHelper');
+const {getResponseObjectTemplate} = require('../utils/helperFunctions');
 
 const requestController = async (req,res) => {
-	const result = {status : false};
+	const result = getResponseObjectTemplate(req);
 	const requestObject = req.body;
 	try{
 		if(checkRequestObjectForNull(requestObject)){

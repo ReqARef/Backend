@@ -1,9 +1,9 @@
 const db = require('../db/database');
-
+const {getResponseObjectTemplate} = require('../utils/helperFunctions');
 const Pool = db.getPool();
 
 const getCompaniesList = async (req,res) => {
-	const result ={status : false};
+	const result = getResponseObjectTemplate(req);
 	try{
 		const getListString = 'SELECT * FROM COMPANIES';
 		const getListResult = await Pool.query(getListString);

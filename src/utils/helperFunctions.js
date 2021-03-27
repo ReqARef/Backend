@@ -30,7 +30,6 @@ const checkEmailAndPasswordForNull = (userCred) => {
 	return true;
 };
 
-
 const genOTP = (len) => {
 	var result = '';
 	var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -51,10 +50,20 @@ const checkRequestInitiationObjectForNull = (requestObject) => {
 	return true;
 };
 
+const getResponseObjectTemplate = (req) => {
+	const result = {
+		status: false,
+		user: req.user,
+		authToken: req.authToken
+	};
+	return result;
+};
+
 module.exports = {
 	checkUserObjectForNull,
 	findUser,
 	checkEmailAndPasswordForNull,
 	genOTP,
-	checkRequestInitiationObjectForNull
+	checkRequestInitiationObjectForNull,
+	getResponseObjectTemplate
 };
