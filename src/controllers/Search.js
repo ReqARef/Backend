@@ -1,8 +1,9 @@
 const db = require('../db/database');
 const Pool = db.getPool();
+const {getResponseObjectTemplate} = require('../utils/helperFunctions');
 
 const usersSearch = async (req, res) => {
-	const result = {status : false};
+	const result = getResponseObjectTemplate(req);
 	try{
 		if(!req.params.company_name){
 			throw new Error('Company Name is null');

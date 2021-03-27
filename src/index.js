@@ -5,6 +5,7 @@ const otpRouter = require('./routers/otpRouter');
 const requestRouter = require('./routers/requestRouter');
 const companyRouter = require('./routers/Company');
 const searchRouter = require('./routers/Search');
+const profileRouter = require('./routers/Profile');
 const port = process.env.port || 3000;
 const cookieParser = require('cookie-parser');
 const app = express();
@@ -18,6 +19,7 @@ app.use(otpRouter);
 app.use(requestRouter);
 app.use(companyRouter);
 app.use(searchRouter);
+app.use(profileRouter);
 
 app.listen(port, () => {
 	console.log('Express up on port:'+port);

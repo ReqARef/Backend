@@ -6,7 +6,7 @@ const Pool = db.getPool();
 const findByCredentials = async (email, password) => {
 	const checkForEmailString = `SELECT * FROM USERS WHERE email=${email.toLowerCase()}`;
 	const checkForEmailResult = await Pool.query(checkForEmailString);
-	if(!checkForEmailResult.rows)
+	if(!checkForEmailResult.rows.length)
 		throw new Error('Email does not exist');
 	const user = checkForEmailResult.rows[0];
 	const isMatch = await bcrypt.compare(password, user.password);
