@@ -1,8 +1,7 @@
 const checkRequestObjectForNull = (requestObject) => {
-	const { requestFrom, requestTo, jobId, companyId, jobUrl, jobName,refereeComment } 
+	const { requestFrom, requestTo, jobId, companyName, jobUrl, comments } 
 	= requestObject;
-
-	if(!requestFrom || !requestTo || !jobId || !companyId || !jobUrl || !jobName || !refereeComment){
+	if(!requestFrom || !requestTo || !jobId || !companyName || !jobUrl || !comments){
 		return false;
 	}
 	return true;
@@ -19,9 +18,10 @@ const extractRefreshTokenHeaderFromReq = (req) => {
 };
 
 const generateId = (requestObject) => {
-	const {requestFrom, requestTo, jobId, companyId} = requestObject;
+	console.log(requestObject);
+	const {requestFrom, requestTo, jobId, companyName} = requestObject;
 	const id = 'request_'+convertToBase64(requestFrom)+'_'+convertToBase64(requestTo)
-	+'_'+convertToBase64(jobId)+'_'+convertToBase64(companyId);
+	+'_'+convertToBase64(jobId)+'_'+convertToBase64(companyName);
 	return id;
 };
 

@@ -5,7 +5,6 @@ CREATE TABLE REQUESTS(
     job_id VARCHAR NOT NULL,
     company_id VARCHAR REFERENCES COMPANIES(company_name) NOT NULL,
     job_url VARCHAR NOT NULL,
-    job_name VARCHAR NOT NULL,
     referral_status SMALLINT NOT NULL DEFAULT 0,
 	referral_acknowledge SMALLINT NOT NULL DEFAULT 0,
 	created_on TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -15,5 +14,5 @@ CREATE TABLE REQUESTS(
 
 CREATE INDEX REQUESTS_PRIMARY_INDEX ON REQUESTS (id);
 
-INSERT INTO REQUESTS(request_from, request_to, job_id, company_id, job_url, job_name ) 
+INSERT INTO REQUESTS(request_from, request_to, job_id, company_id, job_url) 
 VALUES('salwanrohit1998@gmail.com', 'khajuriakanav5@gmail.com', 'AMDOCS-231312','amdocs', 'amdocs.com/job/231312', 'AMDOCS CEO');
