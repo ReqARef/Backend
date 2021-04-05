@@ -15,4 +15,4 @@ CREATE TABLE REQUESTS(
 CREATE INDEX REQUESTS_PRIMARY_INDEX ON REQUESTS (id);
 
 INSERT INTO REQUESTS(request_from, request_to, job_id, company_id, job_url) 
-VALUES('salwanrohit1998@gmail.com', 'khajuriakanav5@gmail.com', 'AMDOCS-231312','amdocs', 'amdocs.com/job/231312');
+VALUES('salwanrohit1998@gmail.com', 'khajuriakanav5@gmail.com', 'AMDOCS-231312','amdocs', 'amdocs.com/job/231312', 'AMDOCS CEO');
