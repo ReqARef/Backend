@@ -1,15 +1,10 @@
 const db = require('../db/database');
 const Pool = db.getPool();
 const { checkRequestObjectForNull, generateId } = require('../utils/RequestHelper');
-const {getResponseObjectTemplate} = require('../utils/helperFunctions');
+const emailSender = require('../utils/emailSender');
 
-<<<<<<< HEAD
 const postRequestController = async (req,res) => {
 	const result = {status : false};
-=======
-const requestController = async (req,res) => {
-	const result = getResponseObjectTemplate(req);
->>>>>>> 6601a43e411cd860f5b1df482fe453f6ae0d6530
 	const requestObject = req.body;
 	requestObject['requestFrom']=req.user.email;
 	try{
@@ -28,6 +23,20 @@ const requestController = async (req,res) => {
 			'${requestObject.companyName}','${requestObject.jobUrl}',
 			'${requestObject.refereeComment}');`;
 		await Pool.query(insertRequestString);
+		const getSenderNameString = `SELECT * FROM USERS WHERE email='${requestObject.requestFrom}'`;
+		const senderName = await Pool.query(getSenderNameString);
+		const getReceiverNameString = `SELECT * FROM USERS WHERE email='${requestObject.requestTo}'`;
+		const receiverName = await Pool.query(getReceiverNameString);
+		console.log(receiverName.rows[0]);
+		console.log(senderName.rows[0]);
+		const email = {
+			to : 'salwanrohit1998@gmail.com',
+			subject : 'Received a referral request',
+			type : 'incomingRequest',
+			toUser : receiverName.rows[0].first_name,
+			fromUser : senderName.rows[0].first_name+' '+ senderName.rows[0].last_name
+		};
+		emailSender(email);
 		result['status']=true;
 		result['authToken']=req.authToken;
 		result['message']='Request added successfully';
