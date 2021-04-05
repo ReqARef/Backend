@@ -1,4 +1,4 @@
-CREATE TABLE USERS(
+CREATE TABLE USERS (
     email VARCHAR PRIMARY KEY,
 	mobile VARCHAR UNIQUE,
     first_name VARCHAR NOT NULL,
@@ -7,10 +7,11 @@ CREATE TABLE USERS(
 	country VARCHAR,
     role INTEGER NOT NULL,
     company_name VARCHAR REFERENCES COMPANIES(company_name),
-    experience INTEGER,
+    experience VARCHAR,
     college VARCHAR,
     job_role VARCHAR,
     resume VARCHAR,
+	bio VARCHAR,
 	otp VARCHAR,
 	refresh_token VARCHAR,
 	email_verified BOOLEAN DEFAULT false,

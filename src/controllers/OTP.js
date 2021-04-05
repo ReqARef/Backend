@@ -1,5 +1,6 @@
 const { SMTPClient } = require('emailjs');
 const { genOTP } = require('../utils/helperFunctions');
+const {getResponseObjectTemplate} = require('../utils/helperFunctions');
 
 const client = new SMTPClient({
 	user : process.env.email_username,
@@ -9,7 +10,7 @@ const client = new SMTPClient({
 });
 
 const emailOTP = async (req,res) => {
-	const result ={status : false};
+	const result = getResponseObjectTemplate(req);
 	try{
 		const recepient = req.body.email;
 		if(!recepient) 

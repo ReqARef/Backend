@@ -1,9 +1,15 @@
 const db = require('../db/database');
 const Pool = db.getPool();
 const { checkRequestObjectForNull, generateId } = require('../utils/RequestHelper');
+const {getResponseObjectTemplate} = require('../utils/helperFunctions');
 
+<<<<<<< HEAD
 const postRequestController = async (req,res) => {
 	const result = {status : false};
+=======
+const requestController = async (req,res) => {
+	const result = getResponseObjectTemplate(req);
+>>>>>>> 6601a43e411cd860f5b1df482fe453f6ae0d6530
 	const requestObject = req.body;
 	requestObject['requestFrom']=req.user.email;
 	try{

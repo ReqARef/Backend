@@ -17,7 +17,7 @@ const auth = async (req, res, next) => {
 			const decoded = jwt.verify(accessToken, process.env.access_jwt_secret);
 			const getUserString = `SELECT * FROM USERS WHERE email='${decoded.email.toLowerCase()}'`;
 			const getUserResult = await Pool.query(getUserString);
-			if(!getUserResult.rows)
+			if(!getUserResult.rows.length)
 				throw new Error();
 			result['user'] = filterUserObject(getUserResult.rows[0]);
 			result['status'] = true;
@@ -37,7 +37,7 @@ const auth = async (req, res, next) => {
 			const matchRefreshTokenString = `SELECT * FROM USERS WHERE 
 			refresh_token='${refreshtoken}'`;
 			const matchRefreshTokenResult = await Pool.query(matchRefreshTokenString);
-			if(!matchRefreshTokenResult.rows)
+			if(!matchRefreshTokenResult.rows.length)
 				throw new Error();
 			jwt.verify(refreshtoken, process.env.refresh_jwt_secret);
 			result['authToken'] = generateAccessToken(matchRefreshTokenResult.rows[0].email);
