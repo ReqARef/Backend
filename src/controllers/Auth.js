@@ -8,6 +8,8 @@ const {
 	generateAccessToken,
 	generateRefreshToken
 } = require('../utils/AuthHelper');
+const {genOTP} = require('../utils/helperFunctions');
+const emailSender = require('../utils/emailSender');
 const {ONE_MONTH_MS} = require('../utils/constants');
 const db = require('../db/database');
 const bcrypt = require('bcryptjs');
@@ -90,7 +92,111 @@ const signUp = async(req,res) => {
 	}
 };
 
+const sendForgotPasswordOTP = async(req,res) => {
+	const result = {status: false};
+	try{
+		let {email} = req.body;
+		if(!email || email === ''){
+			throw new Error('Invalid inputs');
+		}
+		email = email.toLowerCase();
+		const checkExistingEmailString = `SELECT first_name FROM USERS WHERE email=
+			'${email}';`;
+		const checkExistingEmailResult = await Pool.query(checkExistingEmailString);
+		if(checkExistingEmailResult.rows.length == 0){
+			result['error'] = 'Email does not exist';
+			return res.send(result);
+		}
+		const OTP = await genOTP(6, email);
+		const emailObject = {
+			type: 'resetPassword',
+			OTP,
+			toUser: checkExistingEmailResult.rows[0].first_name,
+			to: email,
+			subject: 'Password Reset'
+		};
+		emailSender(emailObject);
+		result['status'] = true;
+		result['message'] = 'OTP Sent Successfully';
+		res.send(result);
+	}
+	catch(err){
+		result.error = err.message;
+		return res.send(result);
+	}
+};
+
+const verifyOTP = async(req,res) => {
+	const result = {status: false};
+	try{
+		let {email, OTP} = req.body;
+		if(!email || email === '' || !OTP || OTP == ''){
+			throw new Error('Invalid inputs');
+		}
+		email = email.toLowerCase();
+		const checkExistingEmailString = `SELECT first_name FROM USERS WHERE email=
+			'${email}';`;
+		const checkExistingEmailResult = await Pool.query(checkExistingEmailString);
+		if(checkExistingEmailResult.rows.length == 0){
+			result['error'] = 'Email does not exist';
+			return res.send(result);
+		}
+		const verifyOTPString = `SELECT otp from USERS WHERE email='${email}'`;
+		const verifyOTPResult = await Pool.query(verifyOTPString);
+		if(verifyOTPResult.rows[0].otp !== OTP) 
+			throw new Error('OTP Mismatch. Try again');
+		result['status'] = true;
+		result['message'] = 'OTP Verified Successfully';
+		res.send(result);
+	}
+	catch(err){
+		result.error = err.message;
+		return res.send(result);
+	}
+};
+
+const updatePassword = async(req,res) => {
+	const result = {status: false};
+	try{
+		let {email, password} = req.body;
+		if(!email || email === '' || !password || password == ''){
+			throw new Error('Invalid inputs');
+		}
+		email = email.toLowerCase();
+		const checkExistingEmailString = `SELECT * FROM USERS WHERE email=
+			'${email}';`;
+		const checkExistingEmailResult = await Pool.query(checkExistingEmailString);
+		if(checkExistingEmailResult.rows.length == 0){
+			result['error'] = 'Email does not exist';
+			return res.send(result);
+		}
+		const userObject = checkExistingEmailResult.rows[0];
+		const encryptedPassword = await bcrypt.hash(
+			password, parseInt(process.env.bcrypt_rounds)
+		);
+		const updatePasswordString = `UPDATE USERS SET password='${encryptedPassword}' 
+			WHERE email='${email}'`;
+		await Pool.query(updatePasswordString);
+		const refreshToken = generateRefreshToken(email);
+		const authToken = generateAccessToken(email);
+		result['status'] = true;
+		result['message'] = 'Password Changed Successfully';
+		delete userObject['password'];
+		result['user'] = userObject;
+		result['authToken'] = authToken;
+		res.cookie('refreshToken', refreshToken, { maxAge:  ONE_MONTH_MS, httpOnly: true});
+		res.send(result);
+	}
+	catch(err){
+		result.error = err.message;
+		return res.send(result);
+	}
+};
+
 module.exports = {
 	login,
-	signUp
+	signUp,
+	sendForgotPasswordOTP,
+	verifyOTP,
+	updatePassword
 };
