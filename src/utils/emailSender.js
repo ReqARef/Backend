@@ -12,7 +12,6 @@ const sendEmail = async (email) => {
 		throw new Error('Email Content object is NULL');
 	}
 	let content = '';
-	console.log(email.type);
 	switch(email.type){
 	case 'incomingRequest':
 		content = `<html> Hi ${email.toUser}, <br> You have received a referral request 
