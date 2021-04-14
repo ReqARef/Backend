@@ -1,13 +1,8 @@
-const { SMTPClient } = require('emailjs');
-const { genOTP } = require('../utils/helperFunctions');
+// const { genOTP } = require('../utils/helperFunctions');
+// const emailSender = require('../utils/emailSender');
 const {getResponseObjectTemplate} = require('../utils/helperFunctions');
 
-const client = new SMTPClient({
-	user : process.env.email_username,
-	password : process.env.email_password,
-	host : process.env.email_host,
-	ssl : true
-});
+// CAN WE REMOVE THIS OTP THING?
 
 const emailOTP = async (req,res) => {
 	const result = getResponseObjectTemplate(req);
@@ -15,13 +10,8 @@ const emailOTP = async (req,res) => {
 		const recepient = req.body.email;
 		if(!recepient) 
 			throw new Error('Invalid inputs. Email required');
-		const otp = genOTP(8);
-		await client.sendAsync({
-			text: 'Your One time password is : ' + otp,
-			from: process.env.email_username,
-			to: recepient,
-			subject: 'ReqARef'
-		});
+		// const otp = genOTP(8);
+		// await emailSender(otp);
 		result['status'] = true;
 		result['message'] = 'OTP sent Successfully';
 		res.send(result);
