@@ -7,6 +7,14 @@ const client = new SMTPClient({
 	ssl : true
 });
 
+const checkForNull = emailContent => {
+	const {to,subject,type} = emailContent;
+	if(!to || !subject || !type){
+		return false;
+	}
+	return true;
+};
+
 const sendEmail = async (email) => {
 	if(!checkForNull(email)){
 		throw new Error('Email Content object is NULL');
@@ -15,15 +23,19 @@ const sendEmail = async (email) => {
 	switch(email.type){
 	case 'incomingRequest':
 		content = `<html> Hi ${email.toUser}, <br> You have received a referral request 
-					from ${email.fromUser}. Please respond as soon as possible. <br>
-					Thanks and Regards,<br> Team ReqARef</html>`;
+						from ${email.fromUser}. Please respond as soon as possible. <br>
+						Thanks and Regards,<br> Team ReqARef</html>`;
+		break;
+	case 'resetPassword':
+		content = `<html> Hi ${email.toUser}, <br> Your OTP is ${email.OTP} <br>
+						Thanks and Regards,<br> Team ReqARef</html>`;
 		break;
 	}
 	await client.sendAsync({
 		text: content,
 		from: process.env.email_username,
 		to: email.to,
-		subject: 'ReqARef',
+		subject: email.subject,
 		attachment: [
 			{ data: content, alternative: true }
 		]
@@ -31,11 +43,3 @@ const sendEmail = async (email) => {
 };
 
 module.exports = sendEmail;
-
-const checkForNull = emailContent => {
-	const {to,subject,type} = emailContent;
-	if(!to || !subject || !type){
-		return false;
-	}
-	return true;
-};

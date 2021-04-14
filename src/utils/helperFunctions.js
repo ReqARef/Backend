@@ -30,11 +30,15 @@ const checkEmailAndPasswordForNull = (userCred) => {
 	return true;
 };
 
-const genOTP = (len) => {
+const genOTP = async (len, email) => {
 	var result = '';
 	var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	for(var i = 0 ; i< len ; i++){
 		result += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	if(email) {
+		const insertOtpString = `UPDATE USERS SET otp='${result}' WHERE email='${email}';`;
+		await Pool.query(insertOtpString);
 	}
 	return result;
 };
