@@ -12,34 +12,35 @@ const stats = async (req,res) => {
 		const stats = {
 			pendingRequests : 0,
 			rejectedRequests : 0,
-			acceptedRequests : 0
+			acceptedRequests : 0,
+			requestCount : 0
 		};
 		const requestSearchString = `SELECT * FROM REQUESTS WHERE request_from='${userEmail}'`;
 		const requestSearchResult = await Pool.query(requestSearchString);
-		
-		if(requestSearchResult.rows.length() <= 0){
-			throw new Error('No request found for user:'+userEmail);
-		}
 		let requests = requestSearchResult.rows;
-		for(let i = 0 ; i < requests.length() ; i++){
-			if(requests[i].referral_status === 0){
+		for(let i = 0 ; i < requests.length ; i++){
+			switch(requests[i].referral_status){
+			case 0:
 				stats.pendingRequests++;
-			}
-			else if(requests[i].referral_status === 1){
+				break;
+			case 1:
 				stats.acceptedRequests++;
-			}
-			else{
+				break;
+			default:
 				stats.rejectedRequests++;
 			}
+			stats.requestCount++;
 		}
-		result['status']=true;
 		result['stats']=stats;
+		result['status']=true;
 		result['authToken'] = req['authToken'];
-		res.send(result);
+		return res.send(result);
 	}
 	catch(err){
+		console.log(err.message);
 		result['error'] = err.message;
-		res.send(res);
+		delete result['user'];
+		return res.send(result);
 	}
 };
 
