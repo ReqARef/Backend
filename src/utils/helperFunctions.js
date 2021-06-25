@@ -1,3 +1,6 @@
+const test = () => {
+    return null;
+}
 const db = require('../db/database'); 
 const Pool = db.getPool();
 const checkUserObjectForNull = (userObject) => {
