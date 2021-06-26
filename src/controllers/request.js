@@ -30,7 +30,7 @@ const postRequestController = async (req,res) => {
 		console.log(receiverName.rows[0]);
 		console.log(senderName.rows[0]);
 		const email = {
-			to : 'salwanrohit1998@gmail.com',
+			to : receiverName.rows[0].email,
 			subject : 'Received a referral request',
 			type : 'incomingRequest',
 			toUser : receiverName.rows[0].first_name,
