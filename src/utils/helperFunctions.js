@@ -19,7 +19,6 @@ const findUser = async (userCred) => {
     if (checkForExistingEmailResult.rows.length == 0) {
         throw new Error('User does not exists');
     }
-    delete checkForExistingEmailResult.rows[0]['password'];
     return checkForExistingEmailResult.rows[0];
 };
 
@@ -33,7 +32,8 @@ const checkEmailAndPasswordForNull = (userCred) => {
 
 const genOTP = async (len, email) => {
     var result = '';
-    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var chars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (var i = 0; i < len; i++) {
         result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
