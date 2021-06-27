@@ -1,7 +1,8 @@
 const router = require('express').Router();
-const {emailOTP} = require('../controllers/OTP');
+const { auth } = require('../middleware/auth');
+const { verifyEmailOTP, sendEmailOTP } = require('../controllers/OTP');
 
-router.post('/emailOTP', emailOTP);
+router.post('/email/otp', auth, sendEmailOTP);
+router.post('/verify/email', auth, verifyEmailOTP);
 
-
-module.exports=router;
+module.exports = router;
