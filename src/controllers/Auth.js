@@ -138,36 +138,6 @@ const sendForgotPasswordOTP = async (req, res) => {
     }
 };
 
-const verifyOTP = async (req, res) => {
-    const result = { status: false };
-    try {
-        let { email, OTP } = req.body;
-        if (!email || email === '' || !OTP || OTP == '') {
-            throw new Error('Invalid inputs');
-        }
-        email = email.toLowerCase();
-        const checkExistingEmailString = `SELECT first_name FROM USERS WHERE email=
-			'${email}';`;
-        const checkExistingEmailResult = await Pool.query(
-            checkExistingEmailString
-        );
-        if (checkExistingEmailResult.rows.length == 0) {
-            result['error'] = 'Email does not exist';
-            return res.send(result);
-        }
-        const verifyOTPString = `SELECT otp from USERS WHERE email='${email}'`;
-        const verifyOTPResult = await Pool.query(verifyOTPString);
-        if (verifyOTPResult.rows[0].otp !== OTP)
-            throw new Error('OTP Mismatch. Try again');
-        result['status'] = true;
-        result['message'] = 'OTP Verified Successfully';
-        res.send(result);
-    } catch (err) {
-        result.error = err.message;
-        return res.send(result);
-    }
-};
-
 const updatePassword = async (req, res) => {
     const result = { status: false };
     try {
@@ -211,10 +181,42 @@ const updatePassword = async (req, res) => {
     }
 };
 
+const verifyOTP = async (req, res) => {
+    const result = { status: false };
+    try {
+        let { email, OTP } = req.body;
+        if (!email || email === '' || !OTP || OTP == '') {
+            throw new Error('Invalid inputs');
+        }
+        email = email.toLowerCase();
+        const checkExistingEmailString = `SELECT first_name FROM USERS WHERE email=
+			'${email}';`;
+        const checkExistingEmailResult = await Pool.query(
+            checkExistingEmailString
+        );
+        if (checkExistingEmailResult.rows.length == 0) {
+            result['error'] = 'Email does not exist';
+            return res.send(result);
+        }
+        const verifyOTPString = `SELECT otp from USERS WHERE email='${email}'`;
+        const verifyOTPResult = await Pool.query(verifyOTPString);
+        if (verifyOTPResult.rows[0].otp !== OTP) {
+            result['error'] = 'Invalid OTP';
+            return res.status(400).send(result);
+        }
+        result['status'] = true;
+        result['message'] = 'OTP Verified Successfully';
+        res.send(result);
+    } catch (err) {
+        result.error = err.message;
+        return res.send(result);
+    }
+};
+
 module.exports = {
     login,
     signUp,
     sendForgotPasswordOTP,
-    verifyOTP,
-    updatePassword
+    updatePassword,
+    verifyOTP
 };
