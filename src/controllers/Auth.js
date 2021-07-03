@@ -11,6 +11,7 @@ const {
 const { genOTP } = require('../utils/helperFunctions');
 const emailSender = require('../utils/emailSender');
 const { ONE_MONTH_MS } = require('../utils/constants');
+const Logger = require('../utils/Logger');
 const db = require('../db/database');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -55,6 +56,7 @@ const login = async (req, res) => {
         });
         res.send(result);
     } catch (err) {
+        Logger.error(`Failed login for req ${req} and error ${err}`);
         result['error'] = err.message;
         return res.send(result);
     }
@@ -98,6 +100,7 @@ const signUp = async (req, res) => {
         });
         res.send(result);
     } catch (err) {
+        Logger.error(`Failed signup for req ${req} and error ${err}`);
         result.error = err.message;
         return res.send(result);
     }
@@ -133,6 +136,9 @@ const sendForgotPasswordOTP = async (req, res) => {
         result['message'] = 'OTP Sent Successfully';
         res.send(result);
     } catch (err) {
+        Logger.error(
+            `Failed to send password reset otp for req ${req} and error ${err}`
+        );
         result.error = err.message;
         return res.send(result);
     }
@@ -176,6 +182,9 @@ const updatePassword = async (req, res) => {
         });
         res.send(result);
     } catch (err) {
+        Logger.error(
+            `Failed to update password for req ${req} and error ${err}`
+        );
         result.error = err.message;
         return res.send(result);
     }
@@ -208,6 +217,7 @@ const verifyOTP = async (req, res) => {
         result['message'] = 'OTP Verified Successfully';
         res.send(result);
     } catch (err) {
+        Logger.error(`Failed to verify otp for req ${req} and error ${err}`);
         result.error = err.message;
         return res.send(result);
     }
