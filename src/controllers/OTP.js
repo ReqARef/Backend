@@ -2,6 +2,7 @@ const { genOTP } = require('../utils/helperFunctions');
 const emailSender = require('../utils/emailSender');
 const { getResponseObjectTemplate } = require('../utils/helperFunctions');
 const db = require('../db/database');
+const Logger = require('../utils/Logger');
 
 const Pool = db.getPool();
 
@@ -24,7 +25,9 @@ const sendEmailOTP = async (req, res) => {
         result['message'] = 'OTP Sent Successfully';
         res.send(result);
     } catch (err) {
-        console.log(err.message);
+        Logger.error(
+            `Failed to send email verification otp for req ${req} and error ${err}`
+        );
         result['error'] = err.message;
         return res.send(result);
     }
@@ -62,7 +65,9 @@ const verifyEmailOTP = async (req, res) => {
         result['message'] = 'OTP Verified Successfully';
         res.send(result);
     } catch (err) {
-        console.log(err.message);
+        Logger.error(
+            `Failed to verify email verification otp for req ${req} and error ${err}`
+        );
         result.error = err.message;
         return res.send(result);
     }

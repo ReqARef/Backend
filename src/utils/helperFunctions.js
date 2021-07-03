@@ -1,5 +1,6 @@
 const db = require('../db/database');
 const Pool = db.getPool();
+
 const checkUserObjectForNull = (userObject) => {
     if (!userObject) {
         return false;
@@ -59,6 +60,7 @@ const checkRequestInitiationObjectForNull = (requestObject) => {
 };
 
 const getResponseObjectTemplate = (req) => {
+    // Use this only for functions that go through auth middleware
     const result = {
         status: false,
         user: req.user,
