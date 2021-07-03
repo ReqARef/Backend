@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-const test = () => {
-    return null;
-}
-const db = require('../db/database'); 
-=======
 const db = require('../db/database');
->>>>>>> fec786a26ec806d992f79ecbf817bdd0cad2d55a
 const Pool = db.getPool();
 
 const checkUserObjectForNull = (userObject) => {
