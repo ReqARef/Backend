@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bunyan": "^1.8.15",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "emailjs": "^3.4.0",
@@ -21,6 +22,8 @@
   },
   "devDependencies": {
     "eslint": "^7.17.0",
-    "nodemon": "^2.0.7"
+    "eslint-config-prettier": "^8.3.0",
+    "nodemon": "^2.0.7",
+    "prettier": "2.3.2"
   }
 }
