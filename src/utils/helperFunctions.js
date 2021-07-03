@@ -60,6 +60,12 @@ const checkRequestInitiationObjectForNull = (requestObject) => {
 };
 
 const getResponseObjectTemplate = (req) => {
+    if (req.user && req.user.password) {
+        delete req.user.password;
+    }
+    if (req.user && req.user.refresh_token) {
+        delete req.user.refresh_token;
+    }
     // Use this only for functions that go through auth middleware
     const result = {
         status: false,
