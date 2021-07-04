@@ -61,6 +61,7 @@ const verifyEmailOTP = async (req, res) => {
         }
         const updateUserString = `UPDATE USERS SET email_verified=true where email='${email}'`;
         await Pool.query(updateUserString);
+        result['user']['email_verified'] = true;
         result['status'] = true;
         result['message'] = 'OTP Verified Successfully';
         res.send(result);
