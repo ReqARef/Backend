@@ -25,7 +25,6 @@ const extractRefreshTokenHeaderFromReq = (req) => {
 };
 
 const generateId = (requestObject) => {
-    console.log(requestObject);
     const { requestFrom, requestTo, jobId, companyName } = requestObject;
     const id =
         'request_' +
