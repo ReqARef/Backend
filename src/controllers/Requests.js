@@ -34,8 +34,6 @@ const sendRequests = async (req, res) => {
         const getReceiverNameString = `SELECT * FROM USERS WHERE \
 			email='${requestObject.requestTo}'`;
         const receiverName = await Pool.query(getReceiverNameString);
-        console.log(receiverName.rows[0]);
-        console.log(senderName.rows[0]);
         const email = {
             to: receiverName.rows[0].email,
             subject: 'Received a referral request',

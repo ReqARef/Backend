@@ -1,4 +1,6 @@
 const { Pool } = require('pg');
+const Logger = require('../utils/Logger');
+
 let pool = null;
 var config = {
     user: process.env.db_username,
@@ -18,7 +20,7 @@ const getPool = () => {
         pool = new Pool(config);
         return pool;
     } catch (err) {
-        console.log(err);
+        Logger.error(`Connecting to database failed with exception ${err}`);
     }
 };
 
