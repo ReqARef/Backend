@@ -76,19 +76,10 @@ const getResponseObjectTemplate = (req) => {
 };
 
 module.exports = {
-<<<<<<< HEAD
-	checkUserObjectForNull,
-	findUser,
-	checkEmailAndPasswordForNull,
-	genOTP,
-	checkRequestInitiationObjectForNull,
-	getResponseObjectTemplate
-=======
     checkUserObjectForNull,
     findUser,
     checkEmailAndPasswordForNull,
     genOTP,
     checkRequestInitiationObjectForNull,
     getResponseObjectTemplate
->>>>>>> fec786a26ec806d992f79ecbf817bdd0cad2d55a
 };

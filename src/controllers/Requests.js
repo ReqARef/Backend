@@ -84,7 +84,39 @@ const getRequests = async (req, res) => {
         return res.send(result);
     }
 };
+
+const handleRequests =  async(req,res) => {
+    const result = getResponseObjectTemplate(req);
+    const requestObject = req.body;
+    console.log(requestObject);
+    try{
+        const requestSearchString = `SELECT * FROM REQUESTS WHERE id = '${requestObject.requestId}';`;
+        const requestSearchQueryResult = await Pool.query(requestSearchString);
+        if(requestSearchQueryResult.rows.length <= 0){
+            throw new Error("No request found");
+        }
+        let status = 0;
+        if(requestObject.action === 'accept'){
+            status = 1;
+        }
+        else{
+            status = -1;
+        }
+        const updateRequestString = `UPDATE REQUESTS SET referral_status =${status} WHERE id ='${requestObject.requestId}';`;
+        console.log(updateRequestString);
+        await Pool.query(updateRequestString);
+        result['authToken'] = req.authToken;
+        result['message']='Request updated successfully';
+        result['status'] = true;
+        res.send(result);
+    }
+    catch(err){
+        result['error'] = err.message;
+        return res.send(result)
+    }
+}
 module.exports = {
     sendRequests,
-    getRequests
+    getRequests,
+    handleRequests
 };
