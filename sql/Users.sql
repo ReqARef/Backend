@@ -19,7 +19,8 @@ CREATE TABLE USERS (
 	is_blocked BOOLEAN DEFAULT false,
 	give_referrals BOOLEAN DEFAULT true,
     last_login TIMESTAMP,
-	created_on TIMESTAMP NOT NULL DEFAULT NOW()
+	created_on TIMESTAMP NOT NULL DEFAULT NOW(),
+	avatar bytea
 );
 
 CREATE INDEX USERS_EMAIL_PRIMARY_INDEX ON USERS (email);
