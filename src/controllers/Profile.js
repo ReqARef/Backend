@@ -94,7 +94,36 @@ const updateProfile = async (req, res) => {
     }
 };
 
+const setAvatar = async (req, res) => {
+    const result = getResponseObjectTemplate(req);
+    try {
+        const image = req.file.buffer;
+        // eslint-disable-next-line quotes
+        const string = "UPDATE USERS SET avatar=$1 WHERE email='email';";
+        await Pool.query(string, [image]);
+        const getUserString = `SELECT * FROM USERS WHERE email='${req.user.email}';`;
+        const userResult = await Pool.query(getUserString);
+        result['user'] = userResult.rows[0];
+        if (result['user']['password']) {
+            delete result['user']['password'];
+        }
+        if (result['user']['refresh_token']) {
+            delete result['user']['refresh_token'];
+        }
+        result['status'] = true;
+        result['message'] = 'Success';
+        res.send(result);
+    } catch (err) {
+        Logger.error(
+            `Failed to update profile for req ${req} and error ${err}`
+        );
+        result['error'] = err.message;
+        return res.send(result);
+    }
+};
+
 module.exports = {
     getProfile,
-    updateProfile
+    updateProfile,
+    setAvatar
 };
