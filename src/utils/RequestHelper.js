@@ -58,9 +58,8 @@ const getRequestHelper = async (userEmail) => {
         const userSearchQueryResult = await Pool.query(userSearchQuery);
         requests[i]['user'] = userSearchQueryResult.rows[0];
     }
-    console.log(requests);
     return requests;
-}
+};
 
 module.exports = {
     checkRequestObjectForNull,
