@@ -2,7 +2,8 @@ const db = require('../db/database');
 const Pool = db.getPool();
 const {
     checkRequestObjectForNull,
-    generateId
+    generateId,
+    getRequestHelper
 } = require('../utils/RequestHelper');
 const emailSender = require('../utils/emailSender');
 const { getResponseObjectTemplate } = require('../utils/helperFunctions');
@@ -59,22 +60,11 @@ const sendRequests = async (req, res) => {
 const getRequests = async (req, res) => {
     const result = getResponseObjectTemplate(req);
     const userEmail = req.user.email;
-    const requestSearchString = `SELECT * FROM REQUESTS WHERE request_to = '${userEmail}';`;
     try {
-        const requestSearchResult = await Pool.query(requestSearchString);
-        let requests = [];
-        if (requestSearchResult != null) {
-            requests = requestSearchResult.rows;
-        }
-
-        for (var i = 0; i < requests.length; i++) {
-            const userSearchQuery = `SELECT * FROM USERS WHERE \
-				email='${requests[i].request_from}';`;
-            const userSearchQueryResult = await Pool.query(userSearchQuery);
-            requests[i]['user'] = userSearchQueryResult.rows[0];
-        }
+        const requests = await getRequestHelper(userEmail);
         result['status'] = true;
         result['requests'] = requests;
+        console.log(result);
         return res.send(result);
     } catch (err) {
         Logger.error(`Failed to get requests for req ${req} and error ${err}`);
@@ -86,6 +76,7 @@ const getRequests = async (req, res) => {
 const handleRequests = async (req, res) => {
     const result = getResponseObjectTemplate(req);
     const requestObject = req.body;
+    const userEmail = req.user.email;
     try {
         const requestSearchString = `SELECT * FROM REQUESTS WHERE id='${requestObject.requestId}';`;
         const requestSearchQueryResult = await Pool.query(requestSearchString);
@@ -101,8 +92,10 @@ const handleRequests = async (req, res) => {
         const updateRequestString = `UPDATE REQUESTS SET referral_status=${status}\
 			WHERE id='${requestObject.requestId}';`;
         await Pool.query(updateRequestString);
+        const requests = await getRequestHelper(userEmail);
         result['authToken'] = req.authToken;
         result['message'] = 'Request updated successfully';
+        result['requests']=requests;
         result['status'] = true;
         res.send(result);
     } catch (err) {
