@@ -99,7 +99,7 @@ const setAvatar = async (req, res) => {
     try {
         const image = req.file.buffer;
         // eslint-disable-next-line quotes
-        const string = "UPDATE USERS SET avatar=$1 WHERE email='email';";
+        const string = `UPDATE USERS SET avatar=$1 WHERE email='${req.user.email}';`;
         await Pool.query(string, [image]);
         const getUserString = `SELECT * FROM USERS WHERE email='${req.user.email}';`;
         const userResult = await Pool.query(getUserString);

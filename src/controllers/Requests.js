@@ -64,7 +64,6 @@ const getRequests = async (req, res) => {
         const requests = await getRequestHelper(userEmail);
         result['status'] = true;
         result['requests'] = requests;
-        console.log(result);
         return res.send(result);
     } catch (err) {
         Logger.error(`Failed to get requests for req ${req} and error ${err}`);
@@ -95,7 +94,7 @@ const handleRequests = async (req, res) => {
         const requests = await getRequestHelper(userEmail);
         result['authToken'] = req.authToken;
         result['message'] = 'Request updated successfully';
-        result['requests']=requests;
+        result['requests'] = requests;
         result['status'] = true;
         res.send(result);
     } catch (err) {
