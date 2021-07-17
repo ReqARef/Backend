@@ -10,7 +10,7 @@ const searchUsersByCompany = async (req, res) => {
             throw new Error('Company Name is null');
         }
         const companyName = req.params.company_name;
-        const userSearchQuery = `SELECT email,first_name,last_name,job_role FROM USERS 
+        const userSearchQuery = `SELECT email,first_name,last_name,job_role,avatar FROM USERS 
 								WHERE company_name='${companyName.toLowerCase()}';`;
         const userSearchResult = await Pool.query(userSearchQuery);
         result['status'] = true;
@@ -44,7 +44,7 @@ const searchUserByEmail = async (req, res) => {
             return res.send(result);
         }
         const userSearchQuery = `SELECT email,first_name,last_name,country,experience,resume, 
-            college,bio,company_name FROM USERS WHERE email='${email}';`;
+            college,bio,company_name,avatar FROM USERS WHERE email='${email}';`;
         const userSearchResult = await Pool.query(userSearchQuery);
         result['status'] = true;
         result['data'] = userSearchResult['rows'][0];
