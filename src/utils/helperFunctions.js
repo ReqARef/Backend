@@ -6,7 +6,14 @@ const checkUserObjectForNull = (userObject) => {
         return false;
     }
     const { email, firstName, lastName, password, role } = userObject;
-    if (!email || !firstName || !lastName || !password || !role) {
+    if (
+        !email ||
+        !firstName ||
+        !lastName ||
+        !password ||
+        role == null ||
+        role == undefined
+    ) {
         return false;
     }
     return true;
