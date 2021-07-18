@@ -98,10 +98,14 @@ const handleRequests = async (req, res) => {
         const updateRequestString = `UPDATE REQUESTS SET referral_status=${status}\
 			WHERE id='${requestObject.requestId}';`;
         await Pool.query(updateRequestString);
-        const requests = await getRequestHelper(userEmail);
+        const { requests, totalPages } = await getRequestHelper(
+            userEmail,
+            requestObject.page
+        );
         result['authToken'] = req.authToken;
         result['message'] = 'Request updated successfully';
         result['requests'] = requests;
+        result['totalPageCount'] = totalPages;
         result['status'] = true;
         res.send(result);
     } catch (err) {

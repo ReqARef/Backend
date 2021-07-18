@@ -49,7 +49,7 @@ const getRequestHelper = async (userEmail, page) => {
     const limit = 10;
     const requestSearchString = `SELECT R.*, to_json(U.*) as user, U.avatar as avatar \
 	FROM REQUESTS R, USERS U WHERE R.request_to='${userEmail}' AND R.request_from=U.email \
-    ORDER BY created_on DESC LIMIT ${limit} OFFSET ${offset};`;
+    AND R.referral_status=0 ORDER BY created_on DESC LIMIT ${limit} OFFSET ${offset};`;
     const requestSearchResult = await Pool.query(requestSearchString);
     const requests = requestSearchResult.rows || [];
     for (let i = 0; i < requests.length; i++) {
