@@ -44,21 +44,36 @@ const convertToBase64 = (temp) => {
     return Buffer.from(temp).toString('base64');
 };
 
-const getRequestHelper = async (userEmail) => {
-    const requestSearchString = `SELECT * FROM REQUESTS WHERE request_to = '${userEmail}';`;
+const getRequestHelper = async (userEmail, page) => {
+    const offset = 10 * page;
+    const limit = 10;
+    const requestSearchString = `SELECT R.*, to_json(U.*) as user, U.avatar as avatar \
+	FROM REQUESTS R, USERS U WHERE R.request_to='${userEmail}' AND R.request_from=U.email \
+    AND R.referral_status=0 ORDER BY created_on DESC LIMIT ${limit} OFFSET ${offset};`;
     const requestSearchResult = await Pool.query(requestSearchString);
-    let requests = [];
-    if (requestSearchResult != null) {
-        requests = requestSearchResult.rows;
+    const requests = requestSearchResult.rows || [];
+    for (let i = 0; i < requests.length; i++) {
+        delete requests[i].user.password;
+        delete requests[i].user.refresh_token;
+        delete requests[i].user.email_verified;
+        delete requests[i].user.created_on;
+        // When a bytea is put into to_json() it gets converted and then the output is not a
+        // byte object that we expect so using "U.avatar as avatar" as a hack to get bytea object
+        delete requests[i].user.avatar;
+        requests[i].user.avatar = requests[i].avatar;
+        delete requests[i].avatar;
     }
 
-    for (var i = 0; i < requests.length; i++) {
-        const userSearchQuery = `SELECT * FROM USERS WHERE \
-            email='${requests[i].request_from}';`;
-        const userSearchQueryResult = await Pool.query(userSearchQuery);
-        requests[i]['user'] = userSearchQueryResult.rows[0];
+    if (`${page}` === '0') {
+        const totalPagesString = `SELECT COUNT(*) FROM REQUESTS WHERE request_to='${userEmail}' \
+		AND referral_status=0`;
+        const totalPagesResult = await Pool.query(totalPagesString);
+        const totalRequests = totalPagesResult.rows[0].count;
+        const totalPages = Math.ceil(totalRequests / 10.0);
+        return { requests, totalPages };
     }
-    return requests;
+
+    return { requests };
 };
 
 module.exports = {
