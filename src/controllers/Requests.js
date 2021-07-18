@@ -17,7 +17,9 @@ const sendRequests = async (req, res) => {
         if (!checkRequestObjectForNull(requestObject)) {
             throw new Error('Invalid Inputs');
         }
+
         const id = generateId(requestObject);
+
         const requestSearchString = `SELECT * FROM REQUESTS WHERE id='${id}'`;
         const requestSearchResult = await Pool.query(requestSearchString);
         if (requestSearchResult.rows.length > 0) {
@@ -29,9 +31,9 @@ const sendRequests = async (req, res) => {
 			'${requestObject.companyName}','${requestObject.jobUrl}',
 			'${requestObject.refereeComment}');`;
         await Pool.query(insertRequestString);
-        const getSenderNameString = `SELECT * FROM USERS WHERE \
-			email='${requestObject.requestFrom}'`;
-        const senderName = await Pool.query(getSenderNameString);
+        // const getSenderNameString = `SELECT * FROM USERS WHERE \
+        // 	email='${requestObject.requestFrom}'`;
+        // const senderName = await Pool.query(getSenderNameString);
         const getReceiverNameString = `SELECT * FROM USERS WHERE \
 			email='${requestObject.requestTo}'`;
         const receiverName = await Pool.query(getReceiverNameString);
@@ -40,10 +42,7 @@ const sendRequests = async (req, res) => {
             subject: 'Received a referral request',
             type: 'incomingRequest',
             toUser: receiverName.rows[0].first_name,
-            fromUser:
-                senderName.rows[0].first_name +
-                ' ' +
-                senderName.rows[0].last_name
+            fromUser: req.user.first_name + ' ' + req.user.last_name
         };
         emailSender(email);
         result['status'] = true;
@@ -60,8 +59,16 @@ const sendRequests = async (req, res) => {
 const getRequests = async (req, res) => {
     const result = getResponseObjectTemplate(req);
     const userEmail = req.user.email;
+    const page = req.params.page;
+    if (!(page >= 0)) {
+        throw new Error('Page not found');
+    }
     try {
-        const requests = await getRequestHelper(userEmail);
+        const { requests, totalPages } = await getRequestHelper(
+            userEmail,
+            page
+        );
+        result['totalPageCount'] = totalPages;
         result['status'] = true;
         result['requests'] = requests;
         return res.send(result);
