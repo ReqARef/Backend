@@ -11,7 +11,7 @@ const searchUsersByCompany = async (req, res) => {
         }
         const companyName = req.params.company_name;
         const userSearchQuery = `SELECT email,first_name,last_name,job_role,avatar FROM USERS 
-								WHERE company_name='${companyName.toLowerCase()}';`;
+								WHERE company_name='${companyName.toLowerCase()}' ORDER BY first_name, last_name;`;
         const userSearchResult = await Pool.query(userSearchQuery);
         result['status'] = true;
         result['data'] = userSearchResult['rows'];
