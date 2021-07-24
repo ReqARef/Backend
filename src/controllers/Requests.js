@@ -29,7 +29,7 @@ const sendRequests = async (req, res) => {
 			company_id, job_url, referee_comment ) VALUES('${id}',
 			'${requestObject.requestFrom}', '${requestObject.requestTo}', '${requestObject.jobId}',
 			'${requestObject.companyName}','${requestObject.jobUrl}',
-			'${requestObject.refereeComment}');`;
+			'${requestObject.comments}');`;
         await Pool.query(insertRequestString);
         // const getSenderNameString = `SELECT * FROM USERS WHERE \
         // 	email='${requestObject.requestFrom}'`;
