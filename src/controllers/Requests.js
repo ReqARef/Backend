@@ -25,10 +25,15 @@ const sendRequests = async (req, res) => {
         if (requestSearchResult.rows.length > 0) {
             throw new Error('Request already exists');
         }
+        let jobUrl = requestObject.jobUrl;
+        if (jobUrl && jobUrl === 'undefined') jobUrl = null;
+        if (jobUrl && !jobUrl.includes('http')) {
+            jobUrl = 'http://' + jobUrl;
+        }
         const insertRequestString = `INSERT INTO REQUESTS(id,request_from, request_to, job_id, 
 			company_id, job_url, referee_comment ) VALUES('${id}',
 			'${requestObject.requestFrom}', '${requestObject.requestTo}', '${requestObject.jobId}',
-			'${requestObject.companyName}','${requestObject.jobUrl}',
+			'${requestObject.companyName}','${jobUrl}',
 			'${requestObject.comments}');`;
         await Pool.query(insertRequestString);
         // const getSenderNameString = `SELECT * FROM USERS WHERE \

@@ -28,7 +28,8 @@ const updateProfile = async (req, res) => {
             experience,
             country,
             role,
-            bio
+            bio,
+            resume
         } = req.body;
         const body = {
             first_name,
@@ -45,6 +46,12 @@ const updateProfile = async (req, res) => {
         let updateString = 'UPDATE users SET ';
         if (company_name) {
             body.company_name = body.company_name.trim().toLowerCase();
+        }
+        if (resume && resume.length > 0) {
+            if (!resume.includes('http')) {
+                resume = 'http://' + resume;
+            }
+            body.resume = resume;
         }
         const keys = Object.keys(body);
         for (let i = 0; i < keys.length; i++) {
