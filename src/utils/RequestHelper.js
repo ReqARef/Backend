@@ -44,12 +44,21 @@ const convertToBase64 = (temp) => {
     return Buffer.from(temp).toString('base64');
 };
 
-const getRequestHelper = async (userEmail, page) => {
+const getRequestHelper = async (userEmail, page, referralStatus) => {
+    let referralCode;
+    if (referralStatus === 'pending') {
+        referralCode = 0;
+    } else if (referralStatus === 'accepted') {
+        referralCode = 1;
+    } else if (referralStatus === 'rejected') {
+        referralCode = -1;
+    }
     const offset = 10 * page;
     const limit = 10;
     const requestSearchString = `SELECT R.*, to_json(U.*) as user, U.avatar as avatar \
 	FROM REQUESTS R, USERS U WHERE R.request_to='${userEmail}' AND R.request_from=U.email \
-    AND R.referral_status=0 ORDER BY created_on DESC LIMIT ${limit} OFFSET ${offset};`;
+    AND R.referral_status=${referralCode} ORDER BY created_on DESC \
+	LIMIT ${limit} OFFSET ${offset};`;
     const requestSearchResult = await Pool.query(requestSearchString);
     const requests = requestSearchResult.rows || [];
     for (let i = 0; i < requests.length; i++) {
@@ -64,16 +73,12 @@ const getRequestHelper = async (userEmail, page) => {
         delete requests[i].avatar;
     }
 
-    if (`${page}` === '0') {
-        const totalPagesString = `SELECT COUNT(*) FROM REQUESTS WHERE request_to='${userEmail}' \
-		AND referral_status=0`;
-        const totalPagesResult = await Pool.query(totalPagesString);
-        const totalRequests = totalPagesResult.rows[0].count;
-        const totalPages = Math.ceil(totalRequests / 10.0);
-        return { requests, totalPages };
-    }
-
-    return { requests };
+    const totalPagesString = `SELECT COUNT(*) FROM REQUESTS WHERE request_to='${userEmail}' \
+		AND referral_status=${referralCode}`;
+    const totalPagesResult = await Pool.query(totalPagesString);
+    const totalRequests = totalPagesResult.rows[0].count;
+    const totalPages = Math.ceil(totalRequests / 10.0);
+    return { requests, totalPages };
 };
 
 module.exports = {

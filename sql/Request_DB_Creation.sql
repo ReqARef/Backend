@@ -6,6 +6,7 @@ CREATE TABLE REQUESTS(
     company_id VARCHAR REFERENCES COMPANIES(company_name) NOT NULL,
     job_url VARCHAR NOT NULL,
     referral_status SMALLINT NOT NULL DEFAULT 0,
+	-- referral_status (0, Pending), (1, Accepted), (-1, Rejected)
 	referral_acknowledge SMALLINT NOT NULL DEFAULT 0,
 	created_on TIMESTAMP NOT NULL DEFAULT NOW(),
 	referrer_comment VARCHAR,
