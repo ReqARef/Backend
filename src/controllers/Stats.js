@@ -16,22 +16,26 @@ const stats = async (req, res) => {
             acceptedRequests: 0,
             requestCount: 0
         };
-        const requestSearchString = `SELECT * FROM REQUESTS WHERE request_from='${userEmail}'`;
+        const requestSearchString = `SELECT x.referral_status, COUNT(*) from \
+		(SELECT * FROM REQUESTS WHERE request_to='${userEmail}') As x GROUP BY \
+		x.referral_status;`;
         const requestSearchResult = await Pool.query(requestSearchString);
-        let requests = requestSearchResult.rows;
-        for (let i = 0; i < requests.length; i++) {
-            switch (requests[i].referral_status) {
-                case 0:
-                    stats.pendingRequests++;
-                    break;
-                case 1:
-                    stats.acceptedRequests++;
-                    break;
-                default:
-                    stats.rejectedRequests++;
+
+        for (let i = 0; i < requestSearchResult.rows.length; i++) {
+            const object = requestSearchResult.rows[i];
+            if (object.referral_status === 0) {
+                stats.pendingRequests = parseInt(object.count);
+            } else if (object.referral_status === 1) {
+                stats.acceptedRequests = parseInt(object.count);
+            } else if (object.referral_status === -1) {
+                stats.rejectedRequests = parseInt(object.count);
             }
-            stats.requestCount++;
         }
+        stats.requestCount =
+            stats.acceptedRequests +
+            stats.pendingRequests +
+            stats.rejectedRequests;
+
         result['stats'] = stats;
         result['status'] = true;
         result['authToken'] = req['authToken'];

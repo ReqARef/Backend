@@ -12,5 +12,8 @@ router.post('/signup', signUp);
 router.post('/resetPassword', sendForgotPasswordOTP);
 router.post('/updatePassword', updatePassword);
 router.post('/verifyOTP', verifyOTP);
+router.get('/', async (req, res) => {
+    res.send('Hello World');
+});
 
 module.exports = router;

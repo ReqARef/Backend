@@ -25,10 +25,15 @@ const sendRequests = async (req, res) => {
         if (requestSearchResult.rows.length > 0) {
             throw new Error('Request already exists');
         }
+        let jobUrl = requestObject.jobUrl;
+        if (jobUrl && jobUrl === 'undefined') jobUrl = null;
+        if (jobUrl && !jobUrl.includes('http')) {
+            jobUrl = 'http://' + jobUrl;
+        }
         const insertRequestString = `INSERT INTO REQUESTS(id,request_from, request_to, job_id, 
 			company_id, job_url, referee_comment ) VALUES('${id}',
 			'${requestObject.requestFrom}', '${requestObject.requestTo}', '${requestObject.jobId}',
-			'${requestObject.companyName}','${requestObject.jobUrl}',
+			'${requestObject.companyName}','${jobUrl}',
 			'${requestObject.comments}');`;
         await Pool.query(insertRequestString);
         // const getSenderNameString = `SELECT * FROM USERS WHERE \
@@ -60,13 +65,16 @@ const getRequests = async (req, res) => {
     const result = getResponseObjectTemplate(req);
     const userEmail = req.user.email;
     const page = req.params.page;
+    const type = req.params.type;
+
     if (!(page >= 0)) {
         throw new Error('Page not found');
     }
     try {
         const { requests, totalPages } = await getRequestHelper(
             userEmail,
-            page
+            page,
+            type
         );
         result['totalPageCount'] = totalPages;
         result['status'] = true;
@@ -100,7 +108,8 @@ const handleRequests = async (req, res) => {
         await Pool.query(updateRequestString);
         const { requests, totalPages } = await getRequestHelper(
             userEmail,
-            requestObject.page
+            requestObject.page,
+            'pending'
         );
         result['authToken'] = req.authToken;
         result['message'] = 'Request updated successfully';
