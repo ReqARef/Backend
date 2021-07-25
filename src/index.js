@@ -9,7 +9,8 @@ const searchRouter = require('./routers/Search');
 const profileRouter = require('./routers/Profile');
 const statsRouter = require('./routers/Stats');
 
-const port = process.env.port || 3000;
+const port = process.env.PORT;
+console.log(port);
 const cookieParser = require('cookie-parser');
 const app = express();
 
