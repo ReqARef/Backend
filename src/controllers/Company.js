@@ -6,7 +6,9 @@ const Logger = require('../utils/Logger');
 const getCompaniesList = async (req, res) => {
     const result = getResponseObjectTemplate(req);
     try {
-        const getListString = 'SELECT * FROM COMPANIES';
+        const getListString =
+            'SELECT DISTINCT C.company_name FROM COMPANIES C, USERS U WHERE \
+			U.company_name=C.company_name ORDER BY C.company_name;';
         const getListResult = await Pool.query(getListString);
         result['status'] = true;
         result['data'] = getListResult['rows'];
