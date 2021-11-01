@@ -64,6 +64,7 @@ const sendRequests = async (req, res) => {
 const getRequests = async (req, res) => {
     const result = getResponseObjectTemplate(req);
     const userEmail = req.user.email;
+    const role = req.user.role;
     const page = req.params.page;
     const type = req.params.type;
 
@@ -74,7 +75,8 @@ const getRequests = async (req, res) => {
         const { requests, totalPages } = await getRequestHelper(
             userEmail,
             page,
-            type
+            type,
+            role
         );
         result['totalPageCount'] = totalPages;
         result['status'] = true;

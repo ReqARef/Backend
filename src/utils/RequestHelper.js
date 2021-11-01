@@ -1,5 +1,6 @@
 const db = require('../db/database');
 const Pool = db.getPool();
+
 const checkRequestObjectForNull = (requestObject) => {
     const { requestFrom, requestTo, jobId, companyName, jobUrl, comments } =
         requestObject;
@@ -44,7 +45,7 @@ const convertToBase64 = (temp) => {
     return Buffer.from(temp).toString('base64');
 };
 
-const getRequestHelper = async (userEmail, page, referralStatus) => {
+const getReferrerRequests = async (userEmail, page, referralStatus) => {
     let referralCode;
     if (referralStatus === 'pending') {
         referralCode = 0;
@@ -79,6 +80,52 @@ const getRequestHelper = async (userEmail, page, referralStatus) => {
     const totalRequests = totalPagesResult.rows[0].count;
     const totalPages = Math.ceil(totalRequests / 10.0);
     return { requests, totalPages };
+};
+
+const getRefereeRequests = async (userEmail, page, referralStatus) => {
+    let referralCode;
+    if (referralStatus === 'pending') {
+        referralCode = 0;
+    } else if (referralStatus === 'accepted') {
+        referralCode = 1;
+    } else if (referralStatus === 'rejected') {
+        referralCode = -1;
+    }
+    const offset = 10 * page;
+    const limit = 10;
+    const requestSearchString = `SELECT R.*, to_json(U.*) as user, U.avatar as avatar \
+	FROM REQUESTS R, USERS U WHERE R.request_from='${userEmail}' AND R.request_to=U.email \
+    AND R.referral_status=${referralCode} ORDER BY created_on DESC \
+	LIMIT ${limit} OFFSET ${offset};`;
+    const requestSearchResult = await Pool.query(requestSearchString);
+    const requests = requestSearchResult.rows || [];
+    for (let i = 0; i < requests.length; i++) {
+        requests[i].user = {
+            first_name: requests[i].user.first_name,
+            last_name: requests[i].user.last_name,
+            email: requests[i].user.email
+        };
+        // When a bytea is put into to_json() it gets converted and then the output is not a
+        // byte object that we expect so using "U.avatar as avatar" as a hack to get bytea object
+        requests[i].user.avatar = requests[i].avatar;
+        delete requests[i].avatar;
+    }
+
+    const totalPagesString = `SELECT COUNT(*) FROM REQUESTS WHERE request_to='${userEmail}' \
+		AND referral_status=${referralCode}`;
+    const totalPagesResult = await Pool.query(totalPagesString);
+    const totalRequests = totalPagesResult.rows[0].count;
+    const totalPages = Math.ceil(totalRequests / 10.0);
+    return { requests, totalPages };
+};
+
+const getRequestHelper = async (userEmail, page, referralStatus, role) => {
+    if (role == 1) {
+        //referrer
+        return getReferrerRequests(userEmail, page, referralStatus);
+    } else {
+        return getRefereeRequests(userEmail, page, referralStatus);
+    }
 };
 
 module.exports = {

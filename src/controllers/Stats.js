@@ -10,6 +10,7 @@ const stats = async (req, res) => {
             throw new Error('User Email is null');
         }
         let userEmail = req.user.email;
+        const userRole = req.user.role;
         const stats = {
             pendingRequests: 0,
             rejectedRequests: 0,
@@ -17,8 +18,10 @@ const stats = async (req, res) => {
             requestCount: 0
         };
         const requestSearchString = `SELECT x.referral_status, COUNT(*) from \
-		(SELECT * FROM REQUESTS WHERE request_to='${userEmail}') As x GROUP BY \
-		x.referral_status;`;
+		(SELECT * FROM REQUESTS WHERE request_${
+            userRole == 0 ? 'from' : 'to'
+        }='${userEmail}') \
+		As x GROUP BY x.referral_status;`;
         const requestSearchResult = await Pool.query(requestSearchString);
 
         for (let i = 0; i < requestSearchResult.rows.length; i++) {
